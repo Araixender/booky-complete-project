@@ -4,16 +4,21 @@ import { Link } from "expo-router";
 import { useState } from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 
-const VocabularyCard = ({ word }: any) => {
+const VocabularyCard = ({ word, trush = false, delfunction }: any) => {
   const [isCheckedBookmark, setIsCheckedBookMark] = useState(false);
+  // Setting Bookmark as string function
   const settingBookmark = async () => {
-    setIsCheckedBookMark(!isCheckedBookmark);
+    setIsCheckedBookMark(true);
     try {
       const savedBookmarks = await AsyncStorage.getItem("bookmark");
-      console.log(savedBookmarks);
+      if (savedBookmarks === null)
+        return await AsyncStorage.setItem("bookmark", word);
       const savedBookmarkArray = savedBookmarks?.split(",");
       savedBookmarkArray?.push(word);
-      const settingArrStr = savedBookmarkArray?.join(",");
+      console.log(savedBookmarkArray);
+      const uniqueBookmarkArr = [...new Set(savedBookmarkArray)];
+      console.log(uniqueBookmarkArr);
+      const settingArrStr = uniqueBookmarkArr?.join(",");
       console.log(settingArrStr);
       await AsyncStorage.setItem("bookmark", settingArrStr as string);
       //   await AsyncStorage.removeItem("bookmark");
@@ -23,14 +28,17 @@ const VocabularyCard = ({ word }: any) => {
         e.message.includes("Passing null/undefined as value is not supported")
       ) {
         try {
-          await AsyncStorage.setItem("bookmark", "bookmark");
+          console.log("code # 1");
+          await AsyncStorage.setItem("bookmark", word);
         } catch (error) {
           console.error(error);
         }
       }
     }
   };
+
   const path = `/word/${word}` as any;
+
   return (
     <View className="max-w-96 bg-white h-20 rounded-lg my-2 mx-auto">
       <Link href={path} asChild>
@@ -42,13 +50,19 @@ const VocabularyCard = ({ word }: any) => {
             </Text>
           </View>
           <View>
-            <TouchableOpacity onPress={settingBookmark}>
-              <Image
-                source={
-                  !isCheckedBookmark ? icons.bookmark : icons.bookmarkBold
-                }
-              />
-            </TouchableOpacity>
+            {!trush ? (
+              <TouchableOpacity onPress={settingBookmark}>
+                <Image
+                  source={
+                    !isCheckedBookmark ? icons.bookmark : icons.bookmarkBold
+                  }
+                />
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity onPress={() => delfunction(word)}>
+                <Image source={icons.delButton} />
+              </TouchableOpacity>
+            )}
           </View>
         </TouchableOpacity>
       </Link>

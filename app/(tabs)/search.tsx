@@ -3,6 +3,7 @@ import VocabularyCard from "@/components/VocabularyCard";
 import { icons } from "@/constraints/icons";
 import { DictinaryObject } from "@/interface/meaning";
 import { fetchSelectedWordFromDictionaryApi } from "@/services/meaning";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
@@ -14,10 +15,40 @@ const search = () => {
   const handleEnterPress = async (search: string) => {
     try {
       const fetchedData = await fetchSelectedWordFromDictionaryApi(search);
+      settingHistory(search);
       // console.log(fetchedData);
       fetchedData && setData(fetchedData);
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  const settingHistory = async (word: string) => {
+    try {
+      const savedHistorys = await AsyncStorage.getItem("history");
+      if (savedHistorys === null)
+        return await AsyncStorage.setItem("history", word);
+      const savedHistoryArray = savedHistorys?.split(",");
+      savedHistoryArray?.push(word);
+      console.log(savedHistoryArray);
+      const uniqueHistoryArr = [...new Set(savedHistoryArray)];
+      console.log(uniqueHistoryArr);
+      const settingArrStr = uniqueHistoryArr?.join(",");
+      console.log(settingArrStr);
+      await AsyncStorage.setItem("history", settingArrStr as string);
+      //   await AsyncStorage.removeItem("history");
+    } catch (e: any) {
+      //   console.error("Saving error", e);
+      if (
+        e.message.includes("Passing null/undefined as value is not supported")
+      ) {
+        try {
+          console.log("code # 1");
+          await AsyncStorage.setItem("history", word);
+        } catch (error) {
+          console.error(error);
+        }
+      }
     }
   };
 
