@@ -12,7 +12,7 @@ const App = () => {
     useCallback(() => {
       (async () => {
         setWordArray(await fetchWord());
-        console.log(wordArray);
+        // console.log(wordArray);
       })();
     }, [])
   );

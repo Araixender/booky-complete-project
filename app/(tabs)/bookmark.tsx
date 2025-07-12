@@ -16,7 +16,7 @@ const bookmark = () => {
       const savedBookmarkArray = savedBookmarks?.split(",");
       savedBookmarkArray !== undefined &&
         setBookmarks(savedBookmarkArray.reverse());
-      console.log(savedBookmarkArray);
+      // console.log(savedBookmarkArray/);
     } catch (error) {}
   };
 

@@ -15,11 +15,11 @@ const VocabularyCard = ({ word, trush = false, delfunction }: any) => {
         return await AsyncStorage.setItem("bookmark", word);
       const savedBookmarkArray = savedBookmarks?.split(",");
       savedBookmarkArray?.push(word);
-      console.log(savedBookmarkArray);
+      // console.log(savedBookmarkArray);
       const uniqueBookmarkArr = [...new Set(savedBookmarkArray)];
       console.log(uniqueBookmarkArr);
       const settingArrStr = uniqueBookmarkArr?.join(",");
-      console.log(settingArrStr);
+      // console.log(settingArrStr);
       await AsyncStorage.setItem("bookmark", settingArrStr as string);
       //   await AsyncStorage.removeItem("bookmark");
     } catch (e: any) {

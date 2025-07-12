@@ -16,7 +16,7 @@ const history = () => {
       const savedHistoryArray = savedHistorys?.split(",");
       savedHistoryArray !== undefined &&
         setHistorys(savedHistoryArray.reverse());
-      console.log(savedHistoryArray);
+      // console.log(savedHistoryArray);
     } catch (error) {}
   };
 
